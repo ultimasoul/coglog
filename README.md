@@ -25,20 +25,34 @@ The manifesto: vision, design principles, and the full command suite at a concep
 
 ## Commands
 
+Three commands cover 90% of usage:
+
+| Command | When to use |
+|---|---|
+| `/cog-init` | Once per project — sets up `.cognitive/`, config, and scripts |
+| `/cog-sync` | Regularly — runs the full pipeline end to end |
+| `/cog-help` | Any time — query the knowledge base in natural language |
+
+Everything else is available when you need finer control:
+
+**Pipeline** (what `/cog-sync` runs internally)
+
 | Command | Description |
 |---|---|
-| `/cog-init` | One-time project setup — creates `.cognitive/` structure, config, and scripts |
-| `/cog-ingest` | Zero-token scraping of thinking blocks from the current project's session cache |
-| `/cog-status` | Quick report on raw queue, wiki files, and config state |
-| `/cog-digest` | Structures raw sessions into wiki documents (ADRs, Bug post-mortems, Domain logic) |
-| `/cog-map` | Regenerates the master knowledge map (`KNOWLEDGE_MAP.md`) |
-| `/cog-check` | Compares the project context file against recent thinking — detects drift |
-| `/cog-prune` | Removes low-value noise from the raw queue |
-| `/cog-erase` | Permanently removes a topic from the knowledge base |
-| `/cog-schedule` | Sets up OS-native automatic scheduling of `ingest.js` |
-| `/cog-rebuild` | Backs up the current KB to a versioned snapshot and regenerates from raw sessions |
-| `/cog-sync` | Runs the full pipeline: ingest → status → digest → map → check → prune |
-| `/cog-help` | Read-only query interface over the knowledge base |
+| `/cog-ingest` | Zero-token scrape of thinking blocks from the session cache |
+| `/cog-status` | Raw queue, wiki file count, and config state |
+| `/cog-digest` | Structure raw sessions into wiki documents (ADRs, Bug post-mortems, Domain logic) |
+| `/cog-map` | Regenerate the master knowledge map (`KNOWLEDGE_MAP.md`) |
+| `/cog-check` | Compare the context file against recent thinking — detect drift |
+| `/cog-prune` | Remove low-value noise from the raw queue |
+
+**Automation & maintenance**
+
+| Command | Description |
+|---|---|
+| `/cog-schedule` | Set up OS-native automatic scheduling of `ingest.js` |
+| `/cog-rebuild` | Back up the current KB to a versioned snapshot and regenerate from raw sessions |
+| `/cog-erase` | Permanently remove a topic from the knowledge base |
 
 ---
 
