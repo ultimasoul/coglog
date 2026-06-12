@@ -17,8 +17,8 @@ This repository contains two files. That's intentional — everything else (raw 
 ### `idea.md` — Architecture & Philosophy
 The manifesto. Defines the vision, design principles, and the full command suite at a conceptual level. LLM-agnostic by design: the architecture applies to any LLM that exposes reasoning traces. Read this to understand *why* CogLog works the way it does.
 
-### `coglog-skill.md` — Claude Code Implementation
-The executable skill. Translates `idea.md` into a concrete Claude Code skill with step-by-step instructions for each command, the complete `ingest.js` source code, and all operational details. Currently targets Claude Code's JSONL session format. Read this to understand *how* to use CogLog.
+### `SKILL.md` — Implementation
+The executable skill. Translates `idea.md` into step-by-step instructions for each command, the complete `ingest.js` and `rebuild.js` source code, and all operational details. Currently targets Claude Code's JSONL session format. Read this to understand *how* to use CogLog.
 
 ---
 
