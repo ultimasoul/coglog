@@ -21,7 +21,7 @@ The knowledge base is not a snapshot — it is the story of how the project reac
 This principle drives two concrete behaviours: wiki entries preserve the full history (original decision + all evolutions, never overwrite); and wiki entries carry explicit `context_refs` pointing to the sections of the project context file they relate to, together with a `context_last_verified` date. This makes the connection between historical reasoning and current documentation explicit and auditable — and enables automated drift detection when the context file evolves.
 
 ### LLM Agnosticism
-CogLog is designed to be agnostic to the underlying LLM. The ingestion script locates session files via a configurable cache path (`COGLOG_CACHE_DIR` environment variable) and processes them through pluggable parsers. Any LLM tool that stores session data locally in a structured format can be supported.
+CogLog is designed to be agnostic to the underlying LLM. The ingestion script locates session files via a configurable cache path (`cacheDir` in `config.json`) and processes them through pluggable parsers. Any LLM tool that stores session data locally in a structured format can be supported.
 
 ### Cross-Platform Paths
 All path operations must use platform-aware libraries (e.g. Node.js `path` and `os` modules) to ensure correct behaviour on Windows, macOS, and Linux.
@@ -129,15 +129,6 @@ Behaviour:
 
 The safety gate is an explicit preview + confirmation step before any deletion occurs.
 
-### Phase 11: Knowledge Base Rebuild — `/cog-rebuild`
-**Versioned reset with full history preservation.** Regenerates the entire knowledge base from the original raw sessions using the current skill logic and schema.
-
-Unlike a destructive reset, `/cog-rebuild` never discards anything: existing wiki files and `KNOWLEDGE_MAP.md` are moved to `.cognitive/_backup/YYYY-MM-DD[_N]/` before the re-digest. Multiple rebuilds on the same day produce `_backup/2026-06-12/`, `_backup/2026-06-12_2/`, etc. This makes the rebuild safe and reversible.
-
-The primary use case is a **schema upgrade**: when the skill is updated and existing wiki files lack new frontmatter fields (e.g. `context_refs`), a rebuild re-digests all raw sessions with the current schema. The skill version is tracked as `coglogSkillVersion` in `config.json`; `/cog-sync` and `/cog-help` report a warning when the stored version is below the expected one, and suggest running `/cog-rebuild`.
-
-File operations (backup, clear wiki, restore archive sessions) are handled by a zero-LLM script (`rebuild.js`) written during `cog-init` alongside `ingest.js`. The LLM is involved only for the subsequent digest → map → check pipeline.
-
 ### Phase 10: Automatic Scheduling — `/cog-schedule`
 **OS-native scheduling of the ingest script.** Sets up, inspects, or removes a recurring task that runs the zero-token ingest script automatically, without requiring an active LLM session.
 
@@ -146,6 +137,15 @@ The command detects the platform (Windows / macOS / Linux) using shell built-ins
 Sub-commands: `/cog-schedule [N]` (create/update, default 4 hours), `/cog-schedule status`, `/cog-schedule off`. Schedule metadata is stored in `config.json` for fast status queries without hitting the OS scheduler every time.
 
 `cog-init` offers this as an optional step during setup. **This is the recommended safeguard against session data loss** — a scheduled ingest running every few hours makes any LLM-side retention window operationally irrelevant.
+
+### Phase 11: Knowledge Base Rebuild — `/cog-rebuild`
+**Versioned reset with full history preservation.** Regenerates the entire knowledge base from the original raw sessions using the current skill logic and schema.
+
+Unlike a destructive reset, `/cog-rebuild` never discards anything: existing wiki files and `KNOWLEDGE_MAP.md` are moved to `.cognitive/_backup/YYYY-MM-DD[_N]/` before the re-digest. Multiple rebuilds on the same day produce `_backup/2026-06-12/`, `_backup/2026-06-12_2/`, etc. This makes the rebuild safe and reversible.
+
+The primary use case is a **schema upgrade**: when the skill is updated and existing wiki files lack new frontmatter fields (e.g. `context_refs`), a rebuild re-digests all raw sessions with the current schema. The skill version is tracked as `coglogSkillVersion` in `config.json`; `/cog-sync` and `/cog-help` report a warning when the stored version is below the expected one, and suggest running `/cog-rebuild`.
+
+File operations (backup, clear wiki, restore archive sessions) are handled by a zero-LLM script (`rebuild.js`) written during `cog-init` alongside `ingest.js`. The LLM is involved only for the subsequent digest → map → check pipeline.
 
 ---
 

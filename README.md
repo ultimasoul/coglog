@@ -70,7 +70,7 @@ Works with any tool that supports the [Agent Skills](https://agentskills.io) sta
 
 After installation, run `/cog-init` to set up the project.
 
-> **How it installs:** The repo has no root `SKILL.md` (it's marked `internal`), so `npx skills add` scans the `skills/` directory and installs each command as a separate top-level skill. Result: `/cog-init`, `/cog-rebuild`, `/coglog`, etc. appear directly in your agent's slash menu — no namespace prefix needed.
+> **How it installs:** There is no root `SKILL.md`, so `npx skills add` scans the `skills/` directory and installs each command as a separate top-level skill. Result: `/cog-init`, `/cog-rebuild`, `/coglog`, etc. appear directly in your agent's slash menu — no namespace prefix needed.
 
 ---
 
