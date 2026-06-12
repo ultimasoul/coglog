@@ -4,7 +4,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Agent Skills](https://img.shields.io/badge/Agent_Skills-compatible-blue)](https://agentskills.io)
-[![Install](https://img.shields.io/badge/Install-npx_add--skill-green)](#install)
+[![Install](https://img.shields.io/badge/Install-npx_skills_add-green)](#install)
 
 During development with LLMs, the model generates thousands of "thinking" tokens containing real engineering value: architectural decisions, bug analyses, domain discoveries. Clients discard or hide this data. CogLog captures it, structures it, and builds an automated project memory that grows with every session.
 
@@ -62,7 +62,7 @@ The pipeline has two tiers: `ingest` is cheap I/O with no token cost and can run
 ## Install
 
 ```bash
-npx add-skill ultimasoul/coglog
+npx skills add ultimasoul/coglog
 ```
 
 Works with any tool that supports the [Agent Skills](https://agentskills.io) standard: Claude Code, Cursor, Gemini CLI, Amp, OpenCode, and more.
