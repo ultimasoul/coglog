@@ -474,6 +474,10 @@ Cache dir:     <path or "auto-detect">
 ## 3. `/cog-digest`
 **Action:** Consolidate raw knowledge into structured documentation with bidirectional traceability.
 
+> ⚠️ **MANDATORY OUTPUT RULES — apply to every wiki file without exception:**
+> 1. **YAML frontmatter is required.** Every wiki file MUST begin with the `---` frontmatter block. A file without frontmatter is invalid and must not be written.
+> 2. **Standard Markdown links only.** All cross-references (in `## Related` or anywhere in the body) MUST use `[Title](filename.md)` format. NEVER write `[[wikilink]]` — this format breaks in VS Code, GitHub preview, and every viewer except Obsidian.
+
 **Execution:**
 1. Read all unprocessed `.md` files in `.cognitive/raw/` (not in `archive/`).
 2. Sort them by the timestamp embedded in the filename (oldest first) to preserve temporal order.
@@ -483,7 +487,7 @@ Cache dir:     <path or "auto-detect">
    - **Context refs**: when writing or updating any wiki file, identify which section(s) of the configured `contextFile` (from `config.json`) this entry relates to. Populate `context_refs` with `"<contextFile> § <Section Heading>"` (use the exact heading as it appears in the context file). Set `context_last_verified` to today's date. If no corresponding section exists in the context file, omit both fields or leave `context_refs` as an empty list — do not invent refs.
 4. **Link format**: always use standard Markdown links `[Title](path.md)` for cross-references between wiki files. Never use wikilink format `[[title]]` — it is not universally supported outside Obsidian.
 
-4b. Wiki file structure (always include YAML frontmatter):
+4b. Wiki file structure — the file MUST follow this exact template, starting with the `---` frontmatter block:
    ```markdown
    ---
    type: ADR | BUG | DOMAIN
@@ -494,29 +498,34 @@ Cache dir:     <path or "auto-detect">
      - session_id_1
      - session_id_2
    context_refs:
-     - "CLAUDE.md § Section Heading"   # heading path in the context file this entry relates to
-   context_last_verified: YYYY-MM-DD   # date these refs were last confirmed as still valid
+     - "CLAUDE.md § Section Heading"
+   context_last_verified: YYYY-MM-DD
    ---
-   
+
    # [Type]_[NNN]: [Title]
-   
+
    ## Context
    What was the situation when this was first discussed.
-   
+
    ## Problem
    The specific problem being solved.
-   
+
    ## Reasoning
    (Derived from Thinking blocks) How the solution was reasoned about.
-   
+
    ## Decision
    What was decided.
-   
+
    ## Evolution
    ### [Date] — [Brief change title]
    What changed and why. Previous decision: [X]. New decision: [Y].
    Reasoning: [from thinking blocks].
+
+   ## Related
+   - [BUG_NNN_Title](BUG_NNN_Title.md)
+   - [ADR_NNN_Title](ADR_NNN_Title.md)
    ```
+   Note: `## Related` links use `[Title](filename.md)` — never `[[wikilink]]`.
 5. **Bidirectional traceability:** before moving each raw file to `archive/`, append the following block to it:
    ```markdown
    ---
@@ -602,10 +611,10 @@ These are candidates for updating the context file.
 1. Check `.cognitive/config.json` for the `contextFile` path (e.g., `CLAUDE.md`). If not set, ask the user: *"Which file is your project context / instructions file? (e.g., CLAUDE.md, .cursorrules, AGENTS.md)"* — save the answer to `config.json` as `contextFile`.
 2. Read the configured context file.
 3. Read the most recent 10 wiki files from `.cognitive/wiki/` and the most recent 5 raw files from `.cognitive/raw/`.
-4. Analyse for convergence:
-   - **Confirmed:** Concepts in the context file that are backed by recent thinking.
-   - **Contradicted:** Concepts in the context file that recent thinking contradicts or has moved away from.
-   - **Missing from context:** Important decisions in recent thinking that are not reflected in the context file.
+4. Analyse for convergence — go **detail level**, not topic level. For each wiki entry, check whether the specific technical details are present in the context file, not just whether the general topic is mentioned. Specifically verify: exact thresholds and parameter values, method call ordering constraints, conditions and their operators, edge case fixes, and per-case distinctions. A topic can match at surface level while critical details that caused bugs remain undocumented.
+   - **Confirmed:** Concepts AND their specific technical details are present in the context file.
+   - **Contradicted:** The context file documents something differently from what the wiki records (different value, different condition, different order).
+   - **Missing from context:** A wiki entry covers a detail, constraint, or fix that is absent from the context file — even if the parent topic is present. Flag each missing detail explicitly (e.g. "CLAUDE.md documents EXIF strip but not the AutoOrient-must-run-first ordering constraint documented in BUG_exif-orientation.md").
 
 4b. **Stale reference check** — for wiki files that carry `context_refs`:
    - Parse the context file into a flat list of all `##` and `###` headings.
