@@ -1,6 +1,6 @@
 ---
 name: coglog
-description: Captures LLM thinking tokens into a structured, versioned knowledge base for any project. Commands: /cog-init (setup), /cog-ingest (scrape), /cog-digest (structure), /cog-map (knowledge map), /cog-check (drift detection), /cog-rebuild (versioned reset), /cog-sync (full pipeline), and more.
+description: "Captures LLM thinking tokens into a structured, versioned knowledge base for any project. Commands: /cog-init (setup), /cog-ingest (scrape), /cog-digest (structure), /cog-map (knowledge map), /cog-check (drift detection), /cog-rebuild (versioned reset), /cog-sync (full pipeline), and more."
 ---
 
 # SYSTEM SKILL: CogLog Manager
