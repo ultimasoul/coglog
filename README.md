@@ -12,8 +12,8 @@ During development with LLMs, the model generates thousands of "thinking" tokens
 
 ## What's in this repo
 
-### `skills/coglog/` — Master instruction set + scripts
-Full implementation: step-by-step instructions for every command, templates, and execution rules. Also contains the bundled Node.js scripts (`ingest.js`, `rebuild.js`, `schedule.js`) in `skills/coglog/scripts/`.
+### `skills/loader-coglog/` — Master instruction set + scripts
+Full implementation: step-by-step instructions for every command, templates, and execution rules. Also contains the bundled Node.js scripts (`ingest.js`, `rebuild.js`, `schedule.js`) in `skills/loader-coglog/scripts/`. Not intended for direct use — invoked automatically by all `cog-*` skills.
 
 ### `skills/cog-*/` — Individual commands (12 total)
 Each command is a separate skill with its own description, making it discoverable in autocomplete and invocable directly as `/cog-*`.

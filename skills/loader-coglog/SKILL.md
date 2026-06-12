@@ -1,6 +1,6 @@
 ---
-name: coglog
-description: "CogLog master instruction set. Captures LLM thinking tokens into a structured, versioned knowledge base. Commands: /cog-init (setup), /cog-ingest (scrape), /cog-digest (structure), /cog-map (knowledge map), /cog-check (drift detection), /cog-rebuild (versioned reset), /cog-sync (full pipeline), and more."
+name: loader-coglog
+description: "CogLog internal loader — master instruction set and bundled scripts for all cog-* commands. Not intended for direct use; invoked automatically by /cog-init, /cog-sync, /cog-rebuild and other cog-* skills."
 ---
 
 # SYSTEM SKILL: CogLog Manager
