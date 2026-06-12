@@ -63,7 +63,7 @@ The pipeline has two tiers: `ingest` is cheap I/O with no token cost and can run
 ## Install
 
 ```bash
-npx skills add ultimasoul/coglog
+npx skills add ultimasoul/coglog -y
 ```
 
 Works with any tool that supports the [Agent Skills](https://agentskills.io) standard: Claude Code, Cursor, Gemini CLI, Amp, OpenCode, and more.
