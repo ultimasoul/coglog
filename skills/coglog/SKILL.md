@@ -1,6 +1,6 @@
 ---
 name: coglog
-description: "Captures LLM thinking tokens into a structured, versioned knowledge base for any project. Commands: /cog-init (setup), /cog-ingest (scrape), /cog-digest (structure), /cog-map (knowledge map), /cog-check (drift detection), /cog-rebuild (versioned reset), /cog-sync (full pipeline), and more."
+description: "CogLog master instruction set. Captures LLM thinking tokens into a structured, versioned knowledge base. Commands: /cog-init (setup), /cog-ingest (scrape), /cog-digest (structure), /cog-map (knowledge map), /cog-check (drift detection), /cog-rebuild (versioned reset), /cog-sync (full pipeline), and more."
 ---
 
 # SYSTEM SKILL: CogLog Manager
@@ -15,6 +15,8 @@ When the user inputs one of the commands below, execute the exact associated act
 Before executing any command, verify that `.cognitive/` exists and contains both `config.json` and `state.json`. If missing, stop and report: `⚠️ CogLog not initialised. Run /cog-init first.` Do NOT create missing files.
 
 **Schema version constant:** The current skill schema version is `2`. Used by `/cog-sync` and `/cog-help` to detect KB schema mismatches.
+
+**Scripts location:** The bundled Node.js scripts (`ingest.js`, `rebuild.js`, `schedule.js`) are in the `scripts/` subdirectory of this file's directory (the `coglog` skill directory). When a sub-skill invokes this file, the absolute scripts path is provided as `COGLOG_SCRIPTS_DIR` in the calling instruction.
 
 ---
 
@@ -31,9 +33,9 @@ Before executing any command, verify that `.cognitive/` exists and contains both
    **Note:** CogLog supports a single context file. If using a multi-file framework (e.g. BMAD), consolidate first.
 5. Ask about scheduling (every 2/4/8h or skip). If chosen, apply Section ## 10.
 6. Write scripts if absent or outdated:
-   - `ingest.js`: if absent or first line ≠ `// coglog-version: 5`, apply Section ## 1.
-   - `rebuild.js`: if absent or first line ≠ `// coglog-rebuild-version: 1`, apply Section ## 11.
-   - `schedule.js`: if absent or first line ≠ `// coglog-schedule-version: 1`, apply Section ## 10.
+   - `ingest.js`: if absent or first line ≠ `// coglog-version: 5`, copy from `COGLOG_SCRIPTS_DIR/ingest.js` to `.cognitive/scripts/ingest.js`.
+   - `rebuild.js`: if absent or first line ≠ `// coglog-rebuild-version: 1`, copy from `COGLOG_SCRIPTS_DIR/rebuild.js` to `.cognitive/scripts/rebuild.js`.
+   - `schedule.js`: if absent or first line ≠ `// coglog-schedule-version: 1`, copy from `COGLOG_SCRIPTS_DIR/schedule.js` to `.cognitive/scripts/schedule.js`.
 7. Report: `✅ CogLog initialised. Scripts: ingest.js (v5), rebuild.js (v1), schedule.js (v1). Next: /cog-ingest`
 
 ---
@@ -41,7 +43,7 @@ Before executing any command, verify that `.cognitive/` exists and contains both
 ## 1. `/cog-ingest`
 **Action:** Cold scraping of the current project's LLM thinking logs.
 
-1. Check `.cognitive/scripts/ingest.js` first line. If absent or ≠ `// coglog-version: 5`: read `scripts/ingest.js` from the skill directory and write it to `.cognitive/scripts/ingest.js`.
+1. Check `.cognitive/scripts/ingest.js` first line. If absent or ≠ `// coglog-version: 5`: copy from `COGLOG_SCRIPTS_DIR/ingest.js` to `.cognitive/scripts/ingest.js`.
 2. **Config migration check** — if `filterPatterns` absent from `config.json`, add default and report: `ℹ️ filterPatterns added.`
 3. Execute: `node .cognitive/scripts/ingest.js`
 4. Return terminal output verbatim. Do not summarise thinking content.
@@ -212,7 +214,7 @@ Execute each step inline by applying the corresponding numbered section — do N
 ## 10. `/cog-schedule [hours|status|off]`
 **Action:** Set up, inspect, or remove automatic OS-level scheduling of `ingest.js`.
 
-1. Check and write `schedule.js` if absent or first line ≠ `// coglog-schedule-version: 1`: read `scripts/schedule.js` from the skill directory and write it to `.cognitive/scripts/schedule.js`.
+1. Check and write `schedule.js` if absent or first line ≠ `// coglog-schedule-version: 1`: copy from `COGLOG_SCRIPTS_DIR/schedule.js` to `.cognitive/scripts/schedule.js`.
 2. Execute the appropriate sub-command:
    - `/cog-schedule [N]` (default N=4): `node .cognitive/scripts/schedule.js create N`
    - `/cog-schedule status`: `node .cognitive/scripts/schedule.js status`
@@ -237,7 +239,7 @@ Use when the skill has been updated and wiki files lack new schema fields, or fo
    Skill version : coglogSkillVersion → 2
    ```
 2. Confirm: *"Proceed? Current KB moves to backup. (yes/no)"* — if no, abort.
-3. Check `.cognitive/scripts/rebuild.js` first line. If absent or ≠ `// coglog-rebuild-version: 1`: read `scripts/rebuild.js` from the skill directory and write it to `.cognitive/scripts/rebuild.js`.
+3. Check `.cognitive/scripts/rebuild.js` first line. If absent or ≠ `// coglog-rebuild-version: 1`: copy from `COGLOG_SCRIPTS_DIR/rebuild.js` to `.cognitive/scripts/rebuild.js`.
 4. Run: `node .cognitive/scripts/rebuild.js`. Report output verbatim.
 5. Re-run pipeline: apply Sections ## 3, ## 4, ## 5 in sequence (digest → map → check). Do NOT re-run ingest.
 6. Report: backup path, new wiki file count, coglogSkillVersion set to 2.

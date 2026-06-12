@@ -1,0 +1,7 @@
+{
+  "name": "coglog",
+  "displayName": "CogLog",
+  "description": "Persistent knowledge base from LLM thinking tokens.",
+  "repository": "https://github.com/ultimasoul/coglog",
+  "license": "MIT"
+}
